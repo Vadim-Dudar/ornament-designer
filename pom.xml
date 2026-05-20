@@ -58,7 +58,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>org.ornamentdesigner/org.ornamentdesigner.Launcher</mainClass>
+                            <mainClass>org.ornamentdesigner/org.ornamentdesigner.OrnamentApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
