@@ -3,7 +3,6 @@ package org.ornamentdesigner;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -24,19 +23,19 @@ public class OrnamentApplication extends Application {
         var root = new Group();
 
         int dimension = Math.min(WIDTH, HEIGHT) - 100;
-        var rectangle = new Rectangle(50, 50, dimension, dimension);
+        final int marginRectangle = 50;
+        var rectangle = new Rectangle(marginRectangle, marginRectangle, dimension, dimension);
         rectangle.setFill(Color.TRANSPARENT);
         rectangle.setStroke(Color.BLACK);
         rectangle.setStrokeWidth(2);
         root.getChildren().add(rectangle);
         for (int i = 0; i < CELLS; i++) {
-            double x = 50 + (i+0.5) * dimension / CELLS;
-            double y = 50 + (i+0.5) * dimension / CELLS;
-            var horizontal = new Line(50, y, 50 + dimension, y);
+            double cord = marginRectangle + (i+0.5) * dimension / CELLS;
+            var horizontal = new Line(marginRectangle, cord, marginRectangle + dimension, cord);
             horizontal.setStroke(Color.GRAY);
             horizontal.setStrokeWidth(1);
             root.getChildren().add(horizontal);
-            var vertical = new Line(x, 50, x, 50 + dimension);
+            var vertical = new Line(cord, marginRectangle, cord, marginRectangle + dimension);
             vertical.setStroke(Color.LIGHTGRAY);
             vertical.setStrokeWidth(1);
             root.getChildren().add(vertical);
