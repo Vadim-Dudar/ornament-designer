@@ -1,15 +1,18 @@
 package org.ornamentdesigner;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -31,44 +34,76 @@ public class OrnamentApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        stage.setResizable(false);
+        stage.setTitle("Ornament Designer - Vadim Dudar");
+        stage.getIcons().add(new Image(
+                Objects.requireNonNull(OrnamentApplication.class.getResourceAsStream("icon.png"))
+        ));
+        stage.setScene(createHomeScene(stage));
+        stage.show();
+    }
+
+    static void main() {
+        launch();
+    }
+
+    private Scene createHomeScene(Stage stage) {
+        var title = new Text("Ornament Designer");
+        title.setFont(Font.font("Arial", 40));
+
+        var description = new Text("Створи свій орнамент і переходь до полотна в один клік.");
+        description.setFont(Font.font("Arial", 20));
+
+        var startDrawingButton = new Button("Перейти до малювання");
+        startDrawingButton.setFont(Font.font("Arial", 24));
+        startDrawingButton.setPrefWidth(320);
+        startDrawingButton.setPrefHeight(60);
+        startDrawingButton.setOnAction(event -> stage.setScene(createEditorScene(stage)));
+
+        var layout = new VBox(24, title, description, startDrawingButton);
+        layout.setAlignment(Pos.CENTER);
+
+        return new Scene(layout, WIDTH, HEIGHT);
+    }
+
+    private Scene createEditorScene(Stage stage) {
         var root = new Group();
 
         createCanvas(root);
 
+        var backBtn = new Button("На головну");
+        backBtn.setLayoutX(marginRectangle * 2 + dimension);
+        backBtn.setLayoutY(marginRectangle);
+        backBtn.setFont(Font.font("Arial", 22));
+        backBtn.setPrefWidth(sideBarWidth);
+        backBtn.setOnAction(event -> stage.setScene(createHomeScene(stage)));
+        root.getChildren().add(backBtn);
+
         var clearBtn = new Button("Clear");
         clearBtn.setLayoutX(marginRectangle * 2 + dimension);
-        clearBtn.setLayoutY(marginRectangle);
-        clearBtn.setOnMouseClicked(event -> {
-            for (int i = 0; i < CELLS; i++) {
-                for (int j = 0; j < CELLS; j++) {
-                    colors[i][j] = Color.TRANSPARENT;
-                    rectangles[i][j].setFill(Color.TRANSPARENT);
-                }
-            }
-        });
+        clearBtn.setLayoutY(marginRectangle * 2);
+        clearBtn.setOnMouseClicked(event -> clearCanvas());
         clearBtn.setFont(Font.font("Arial", 22));
         clearBtn.setPrefWidth(sideBarWidth);
         root.getChildren().add(clearBtn);
 
         ColorPicker colorPicker = new ColorPicker(currentColor);
         colorPicker.setLayoutX(marginRectangle * 2 + dimension);
-        colorPicker.setLayoutY(marginRectangle * 2 + clearBtn.getHeight());
+        colorPicker.setLayoutY(marginRectangle * 3);
         colorPicker.setOnAction(event -> currentColor = colorPicker.getValue());
         colorPicker.setPrefWidth(sideBarWidth);
         root.getChildren().add(colorPicker);
 
-        Scene scene = new Scene(root, WIDTH, HEIGHT);
-        stage.setResizable(false);
-        stage.setTitle("Ornament Designer - Vadim Dudar");
-        stage.getIcons().add(new Image(
-                Objects.requireNonNull(OrnamentApplication.class.getResourceAsStream("icon.png"))
-        ));
-        stage.setScene(scene);
-        stage.show();
+        return new Scene(root, WIDTH, HEIGHT);
     }
 
-    static void main() {
-        launch();
+    private void clearCanvas() {
+        for (int i = 0; i < CELLS; i++) {
+            for (int j = 0; j < CELLS; j++) {
+                colors[i][j] = Color.TRANSPARENT;
+                rectangles[i][j].setFill(Color.TRANSPARENT);
+            }
+        }
     }
 
     private void createCanvas(Group root) {
