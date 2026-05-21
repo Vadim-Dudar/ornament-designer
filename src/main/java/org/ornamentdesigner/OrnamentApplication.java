@@ -17,8 +17,8 @@ import java.util.Objects;
 
 public class OrnamentApplication extends Application {
 
-    private static final int WIDTH = 1500;
-    private static final int HEIGHT = 1000;
+    private static final int WIDTH = 1200;
+    private static final int HEIGHT = 800;
     private static final int CELLS = 20;
 
     private final int marginRectangle = 50;
@@ -55,7 +55,6 @@ public class OrnamentApplication extends Application {
         colorPicker.setLayoutY(marginRectangle * 2 + clearBtn.getHeight());
         colorPicker.setOnAction(event -> currentColor = colorPicker.getValue());
         colorPicker.setPrefWidth(sideBarWidth);
-        //colorPicker.setStyle("-fx-color-label-visible: false;");
         root.getChildren().add(colorPicker);
 
         Scene scene = new Scene(root, WIDTH, HEIGHT);
@@ -104,7 +103,7 @@ public class OrnamentApplication extends Application {
                     if (event.isControlDown()) {
                         colors[x][y] = Color.TRANSPARENT;
                     } else {
-                        colors[x][y] = colors[x][y].equals(Color.TRANSPARENT) ? currentColor : Color.TRANSPARENT;
+                        colors[x][y] = colors[x][y].equals(Color.TRANSPARENT) ? currentColor : colors[x][y].equals(currentColor) ? Color.TRANSPARENT : currentColor ;
                     }
                     cell.setFill(colors[x][y]);
                 });
