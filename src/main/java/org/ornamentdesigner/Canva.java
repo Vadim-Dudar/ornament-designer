@@ -84,11 +84,11 @@ public class Canva {
         int horizontalCord = cells - x - 1;
         int verticalCord = cells - y - 1;
 
-        if (horizontal) {
+        if (vertical) {
             colors[horizontalCord][y] = colors[x][y];
             rectangles[horizontalCord][y].setFill(colors[horizontalCord][y]);
         }
-        if (vertical) {
+        if (horizontal) {
             colors[x][verticalCord] = colors[x][y];
             rectangles[x][verticalCord].setFill(colors[x][verticalCord]);
         }
@@ -122,5 +122,13 @@ public class Canva {
 
     public void setHorizontal(boolean horizontal) {
         this.horizontal = horizontal;
+    }
+
+    public void export() {
+
+    }
+
+    public void load() {
+
     }
 }

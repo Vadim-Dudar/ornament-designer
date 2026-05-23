@@ -6,6 +6,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -125,6 +126,19 @@ public class OrnamentApplication extends Application {
         symmetryLayout.setAlignment(Pos.CENTER);
         root.getChildren().add(symmetryLayout);
 
-        return new Scene(root, WIDTH, HEIGHT);
+        Menu fileMenu = new Menu("Файл");
+        MenuItem saveItem = new MenuItem("Зберегти");
+        saveItem.setOnAction(event -> canvas.export());
+        MenuItem loadItem = new MenuItem("Завантажити в програму");
+        saveItem.setOnAction(event -> canvas.load());
+        fileMenu.getItems().addAll(saveItem, loadItem);
+
+        MenuBar menuBar = new MenuBar(fileMenu);
+
+        BorderPane layout = new BorderPane();
+        layout.setCenter(root);
+        layout.setTop(menuBar);
+
+        return new Scene(layout, WIDTH, HEIGHT);
     }
 }
