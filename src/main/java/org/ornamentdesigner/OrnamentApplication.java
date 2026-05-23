@@ -27,18 +27,14 @@ public class OrnamentApplication extends Application {
     private final int dimension = Math.min(WIDTH, HEIGHT) - 100;
     private final int sideBarWidth = WIDTH - dimension - marginRectangle * 3;
 
-    private Rectangle[][] rectangles = null;
-    private Color[][] colors = null;
     private Color currentColor = Color.RED;
-    private int cells = 20;
+    private Canva canvas;
 
     @Override
     public void start(Stage stage) throws IOException {
         stage.setResizable(false);
         stage.setTitle("Ornament Designer - Vadim Dudar");
-        stage.getIcons().add(new Image(
-                Objects.requireNonNull(OrnamentApplication.class.getResourceAsStream("icon.png"))
-        ));
+        stage.getIcons().add(new Image(Objects.requireNonNull(OrnamentApplication.class.getResourceAsStream("icon.png"))));
         stage.setScene(createHomeScene(stage));
         stage.show();
     }
@@ -77,9 +73,7 @@ public class OrnamentApplication extends Application {
             stage.setScene(createEditorScene(stage, size));
         });
 
-        HBox radioBtn = new HBox(
-                20, new Label("Розмірність"), size8, size12, size16, size20, size24
-        );
+        HBox radioBtn = new HBox(20, new Label("Розмірність"), size8, size12, size16, size20, size24);
         radioBtn.setAlignment(Pos.CENTER);
 
         var layout = new VBox(24, title, description, startDrawingButton, radioBtn);
@@ -89,11 +83,10 @@ public class OrnamentApplication extends Application {
     }
 
     private Scene createEditorScene(Stage stage, int cells) {
-        this.cells = cells;
 
         var root = new Group();
 
-        createCanvas(root);
+        canvas = new Canva(root, cells, dimension, marginRectangle);
 
         var backBtn = new Button("На головну");
         backBtn.setLayoutX(marginRectangle * 2 + dimension);
@@ -106,71 +99,32 @@ public class OrnamentApplication extends Application {
         var clearBtn = new Button("Clear");
         clearBtn.setLayoutX(marginRectangle * 2 + dimension);
         clearBtn.setLayoutY(marginRectangle * 2);
-        clearBtn.setOnMouseClicked(event -> clearCanvas());
+        clearBtn.setOnMouseClicked(event -> canvas.clearCanvas());
         clearBtn.setFont(Font.font("Arial", 22));
         clearBtn.setPrefWidth(sideBarWidth);
         root.getChildren().add(clearBtn);
 
-        ColorPicker colorPicker = new ColorPicker(currentColor);
+        ColorPicker colorPicker = new ColorPicker(canvas.getColor());
         colorPicker.setLayoutX(marginRectangle * 2 + dimension);
         colorPicker.setLayoutY(marginRectangle * 3);
-        colorPicker.setOnAction(event -> currentColor = colorPicker.getValue());
+        colorPicker.setOnAction(event -> canvas.setColor(colorPicker.getValue()));
         colorPicker.setPrefWidth(sideBarWidth);
         root.getChildren().add(colorPicker);
 
+        CheckBox horizontal = new CheckBox("Горизонтальна");
+        horizontal.setFont(Font.font("Arial", 14));
+        horizontal.setOnAction(event -> canvas.setHorizontal(horizontal.isSelected()));
+        CheckBox vertical = new CheckBox("Вертикальна");
+        vertical.setFont(Font.font("Arial", 14));
+        vertical.setOnAction(event -> canvas.setVertical(vertical.isSelected()));
+        Label symmetryLabel = new Label("Режим симетрії");
+        symmetryLabel.setFont(Font.font("Arial", 22));
+        VBox symmetryLayout = new VBox(10, symmetryLabel, new HBox(24, horizontal, vertical));
+        symmetryLayout.setLayoutX(dimension + marginRectangle * 3);
+        symmetryLayout.setLayoutY(marginRectangle * 4);
+        symmetryLayout.setAlignment(Pos.CENTER);
+        root.getChildren().add(symmetryLayout);
+
         return new Scene(root, WIDTH, HEIGHT);
-    }
-
-    private void clearCanvas() {
-        for (int i = 0; i < cells; i++) {
-            for (int j = 0; j < cells; j++) {
-                colors[i][j] = Color.TRANSPARENT;
-                rectangles[i][j].setFill(Color.TRANSPARENT);
-            }
-        }
-    }
-
-    private void createCanvas(Group root) {
-        rectangles = new Rectangle[cells][cells];
-        colors = new Color[cells][cells];
-
-        var rectangle = new Rectangle(marginRectangle, marginRectangle, dimension, dimension);
-        rectangle.setFill(Color.TRANSPARENT);
-        rectangle.setStroke(Color.BLACK);
-        rectangle.setStrokeWidth(2);
-        root.getChildren().add(rectangle);
-        for (int i = 0; i < cells; i++) {
-            double cord = marginRectangle + (i + 0.5) * dimension / cells;
-            var horizontal = new Line(marginRectangle, cord, marginRectangle + dimension, cord);
-            horizontal.setStroke(Color.GRAY);
-            horizontal.setStrokeWidth(1);
-            root.getChildren().add(horizontal);
-            var vertical = new Line(cord, marginRectangle, cord, marginRectangle + dimension);
-            vertical.setStroke(Color.LIGHTGRAY);
-            vertical.setStrokeWidth(1);
-            root.getChildren().add(vertical);
-
-            for (int j = 0; j < cells; j++) {
-                var cell = new Rectangle(
-                        marginRectangle + i * dimension / cells,
-                        marginRectangle + j * dimension / cells,
-                        dimension / cells, dimension / cells
-                );
-                cell.setFill(Color.TRANSPARENT);
-                rectangles[i][j] = cell;
-                colors[i][j] = Color.TRANSPARENT;
-                cell.setOnMousePressed(event -> {
-                    int x = (int) ((cell.getX() - marginRectangle) / (dimension / cells));
-                    int y = (int) ((cell.getY() - marginRectangle) / (dimension / cells));
-                    if (event.isControlDown()) {
-                        colors[x][y] = Color.TRANSPARENT;
-                    } else {
-                        colors[x][y] = colors[x][y].equals(Color.TRANSPARENT) ? currentColor : colors[x][y].equals(currentColor) ? Color.TRANSPARENT : currentColor;
-                    }
-                    cell.setFill(colors[x][y]);
-                });
-                root.getChildren().add(cell);
-            }
-        }
     }
 }
