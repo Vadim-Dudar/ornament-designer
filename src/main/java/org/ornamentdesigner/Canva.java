@@ -6,6 +6,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
+import java.util.ArrayList;
+
 public class Canva {
 
     private Rectangle[][] rectangles = null;
@@ -69,6 +71,8 @@ public class Canva {
     }
 
     private void onCellClick(MouseEvent event, Rectangle cell) {
+        ArrayList<Rectangle> added = new ArrayList<>();
+
         int x = (int) ((cell.getX() - marginRectangle) / (dimension / cells));
         int y = (int) ((cell.getY() - marginRectangle) / (dimension / cells));
         if (event.isControlDown()) {
@@ -76,6 +80,23 @@ public class Canva {
         } else {
             colors[x][y] = colors[x][y].equals(Color.TRANSPARENT) ? color : colors[x][y].equals(color) ? Color.TRANSPARENT : color;
         }
+
+        int horizontalCord = cells - x - 1;
+        int verticalCord = cells - y - 1;
+
+        if (horizontal) {
+            colors[horizontalCord][y] = colors[x][y];
+            rectangles[horizontalCord][y].setFill(colors[horizontalCord][y]);
+        }
+        if (vertical) {
+            colors[x][verticalCord] = colors[x][y];
+            rectangles[x][verticalCord].setFill(colors[x][verticalCord]);
+        }
+        if (horizontal && vertical) {
+            colors[horizontalCord][verticalCord] = colors[x][y];
+            rectangles[horizontalCord][verticalCord].setFill(colors[horizontalCord][verticalCord]);
+        }
+
         cell.setFill(colors[x][y]);
     }
 
