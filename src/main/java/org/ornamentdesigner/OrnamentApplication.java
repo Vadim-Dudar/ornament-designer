@@ -10,12 +10,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -105,10 +105,10 @@ public class OrnamentApplication extends Application {
         clearBtn.setPrefWidth(sideBarWidth);
         root.getChildren().add(clearBtn);
 
-        ColorPicker colorPicker = new ColorPicker(canvas.getColor());
+        ColorPicker colorPicker = new ColorPicker(canvas.getCurrentColor());
         colorPicker.setLayoutX(marginRectangle * 2 + dimension);
         colorPicker.setLayoutY(marginRectangle * 3);
-        colorPicker.setOnAction(event -> canvas.setColor(colorPicker.getValue()));
+        colorPicker.setOnAction(event -> canvas.setCurrentColor(colorPicker.getValue()));
         colorPicker.setPrefWidth(sideBarWidth);
         root.getChildren().add(colorPicker);
 
@@ -126,11 +126,24 @@ public class OrnamentApplication extends Application {
         symmetryLayout.setAlignment(Pos.CENTER);
         root.getChildren().add(symmetryLayout);
 
+        FileChooser fileChooser = new FileChooser();
+
         Menu fileMenu = new Menu("Файл");
         MenuItem saveItem = new MenuItem("Зберегти");
-        saveItem.setOnAction(event -> canvas.export());
+        saveItem.setOnAction(event -> {
+            fileChooser.setTitle("Оберіть файл куди зберегти");
+            fileChooser.setInitialFileName("icon.png");
+            File file = fileChooser.showSaveDialog(stage);
+            if (file != null)
+                OrnamentIO.save(file, canvas);
+        });
         MenuItem loadItem = new MenuItem("Завантажити в програму");
-        saveItem.setOnAction(event -> canvas.load());
+        loadItem.setOnAction(event -> {
+            fileChooser.setTitle("Оберіть файл для імпорту в програму");
+            File file = fileChooser.showOpenDialog(stage);
+            if (file != null)
+                OrnamentIO.load(file, canvas);
+        });
         fileMenu.getItems().addAll(saveItem, loadItem);
 
         MenuBar menuBar = new MenuBar(fileMenu);

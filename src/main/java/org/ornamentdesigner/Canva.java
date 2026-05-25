@@ -100,35 +100,36 @@ public class Canva {
         cell.setFill(colors[x][y]);
     }
 
-    public void setColor(Color color) {
+    public void setCurrentColor(Color color) {
         this.color = color;
     }
 
-    public Color getColor() {
-        return color;
+    public Color getColor(int x, int y) {
+        return colors[x][y];
     }
 
-    public boolean isVertical() {
-        return vertical;
+    public Color getCurrentColor() {
+        return color;
     }
 
     public void setVertical(boolean vertical) {
         this.vertical = vertical;
     }
 
-    public boolean isHorizontal() {
-        return horizontal;
-    }
-
     public void setHorizontal(boolean horizontal) {
         this.horizontal = horizontal;
     }
 
-    public void export() {
-
+    public Color[][] getColors() {
+        return colors;
     }
 
-    public void load() {
+    public void setColor(int x, int y, Color color) {
+        colors[x][y] = color;
+        rectangles[x][y].setFill(colors[x][y]);
+    }
 
+    public int getCells() {
+        return cells;
     }
 }
