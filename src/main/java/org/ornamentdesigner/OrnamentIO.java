@@ -1,5 +1,6 @@
 package org.ornamentdesigner;
 
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
@@ -45,13 +46,18 @@ public class OrnamentIO {
         }
     }
 
-    public static void load(File file, Canva canva) {
+    public static Canva load(File file, Group root, int rootDimension, int marginRectangle) {
+        Canva canva;
+
         try {
             BufferedImage image = ImageIO.read(file);
 
             int dimension = Math.min(image.getWidth(), image.getHeight());
-            for (int i = 0; i < dimension / cellSize; i++) {
-                for (int j = 0; j < dimension / cellSize; j++) {
+            int cells = dimension / cellSize;
+            canva = new Canva(root, cells, rootDimension, marginRectangle);
+
+            for (int i = 0; i < cells; i++) {
+                for (int j = 0; j < cells; j++) {
                     int pixelX = (int) ((i+0.5) * cellSize);
                     int pixelY = (int) ((j+0.5) * cellSize);
 
@@ -72,7 +78,7 @@ public class OrnamentIO {
             throw new RuntimeException(e);
         }
 
-
+        return canva;
     }
 
 }

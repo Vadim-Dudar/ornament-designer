@@ -142,7 +142,7 @@ public class OrnamentApplication extends Application {
             fileChooser.setTitle("Оберіть файл для імпорту в програму");
             File file = fileChooser.showOpenDialog(stage);
             if (file != null)
-                OrnamentIO.load(file, canvas);
+                canvas = OrnamentIO.load(file, root, dimension, marginRectangle);
         });
         fileMenu.getItems().addAll(saveItem, loadItem);
 

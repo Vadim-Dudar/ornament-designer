@@ -31,7 +31,7 @@ public class Canva {
         colors = new Color[cells][cells];
 
         var rectangle = new Rectangle(marginRectangle, marginRectangle, dimension, dimension);
-        rectangle.setFill(Color.TRANSPARENT);
+        rectangle.setFill(Color.WHITE);
         rectangle.setStroke(Color.BLACK);
         rectangle.setStrokeWidth(2);
         root.getChildren().add(rectangle);
