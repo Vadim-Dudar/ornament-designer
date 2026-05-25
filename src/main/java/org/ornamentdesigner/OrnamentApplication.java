@@ -179,6 +179,14 @@ public class OrnamentApplication extends Application {
         CheckBox vertical = new CheckBox("Вертикальна");
         vertical.setFont(Font.font("Arial", 14));
         vertical.setOnAction(event -> canvas.setVertical(vertical.isSelected()));
+        var duplicateBtn = new Button("Дублювати");
+        duplicateBtn.setFont(Font.font("Arial", 16));
+        duplicateBtn.setPrefWidth(sideBarWidth);
+        duplicateBtn.disableProperty().bind(horizontal.selectedProperty().not().and(vertical.selectedProperty().not()));
+        duplicateBtn.setOnAction(event -> canvas.duplicateSymmetry());
+        duplicateBtn.setLayoutX(marginRectangle * 2 + dimension);
+        duplicateBtn.setLayoutY(marginRectangle * 6);
+        root.getChildren().add(duplicateBtn);
         Label symmetryLabel = new Label("Режим симетрії");
         symmetryLabel.setFont(Font.font("Arial", 22));
         VBox symmetryLayout = new VBox(10, symmetryLabel, new HBox(24, horizontal, vertical));

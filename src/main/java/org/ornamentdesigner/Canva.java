@@ -70,6 +70,38 @@ public class Canva {
         }
     }
 
+    public void duplicateSymmetry() {
+        Color[][] originalColors = new Color[cells][cells];
+        for (int i = 0; i < cells; i++) {
+            for (int j = 0; j < cells; j++) {
+                originalColors[i][j] = colors[i][j];
+            }
+        }
+
+        for (int i = 0; i < cells; i++) {
+            for (int j = 0; j < cells; j++) {
+                if (!originalColors[i][j].equals(Color.TRANSPARENT)) {
+                    duplicateCell(i, j, originalColors[i][j]);
+                }
+            }
+        }
+    }
+
+    private void duplicateCell(int x, int y, Color color) {
+        int horizontalCord = cells - x - 1;
+        int verticalCord = cells - y - 1;
+
+        if (vertical) {
+            setColor(horizontalCord, y, color);
+        }
+        if (horizontal) {
+            setColor(x, verticalCord, color);
+        }
+        if (horizontal && vertical) {
+            setColor(horizontalCord, verticalCord, color);
+        }
+    }
+
     private void onCellClick(MouseEvent event, Rectangle cell) {
         ArrayList<Rectangle> added = new ArrayList<>();
 
